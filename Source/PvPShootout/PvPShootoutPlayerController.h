@@ -2,7 +2,9 @@
 
 #pragma once
 
+// #include "PlayerHUD.h"
 #include "CoreMinimal.h"
+#include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerController.h"
 #include "PvPShootoutPlayerController.generated.h"
 
@@ -15,17 +17,23 @@ UCLASS()
 class PVPSHOOTOUT_API APvPShootoutPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+    UInputAction* Interact;
+
+    void PointerPressed();
+    void TryCreateAndJoinNewSession();
 protected:
 
-	/** Input Mapping Context to be used for player input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* InputMappingContext;
 
-	// Begin Actor interface
-protected:
 
 	virtual void BeginPlay() override;
-
-	// End Actor interface
+    void PointerRelease();
+    UFUNCTION()
+    void JoinSessionIfSucceeded(bool success);
+    void JoinSession();
+    virtual void SetupInputComponent() override;
 };

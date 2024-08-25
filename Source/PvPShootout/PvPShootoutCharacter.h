@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/WidgetInteractionComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "PvPShootoutCharacter.generated.h"
@@ -36,7 +37,7 @@ class APvPShootoutCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
-	
+
 public:
 	APvPShootoutCharacter();
 
@@ -44,10 +45,13 @@ protected:
 	virtual void BeginPlay();
 
 public:
-		
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
+    UWidgetInteractionComponent* Interaction;
+
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UInputAction* LookAction;
 
 protected:
 	/** Called for movement input */
