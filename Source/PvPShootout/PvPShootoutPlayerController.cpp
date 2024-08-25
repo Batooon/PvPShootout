@@ -11,13 +11,10 @@
 
 void APvPShootoutPlayerController::PointerPressed()
 {
-    UE_LOG(LogTemp, Display, TEXT("Character Pressed"));
     if(const APvPShootoutCharacter* Ch = Cast<APvPShootoutCharacter>(GetPawn()))
     {
-        UE_LOG(LogTemp, Display, TEXT("Character Pressed"));
         if(Ch->Interaction)
         {
-            UE_LOG(LogTemp, Display, TEXT("Character Pressed"));
             Ch->Interaction->PressPointerKey(EKeys::LeftMouseButton);
         }
     }
@@ -30,10 +27,8 @@ void APvPShootoutPlayerController::BeginPlay()
     if(!IsLocalPlayerController())
         return;
 
-	// get the enhanced input subsystem
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		// add the mapping context so we get controls
 		Subsystem->AddMappingContext(InputMappingContext, 0);
 	}
 }
@@ -64,7 +59,7 @@ void APvPShootoutPlayerController::JoinSessionIfSucceeded(bool success)
     sessionSubsystem->OnCreateSessionCompleteEvent.RemoveDynamic(this, &ThisClass::JoinSessionIfSucceeded);
     if(success)
     {
-        UGameplayStatics::OpenLevel(GetWorld(), "StarterMap", true, "listen");
+        UGameplayStatics::OpenLevel(GetWorld(), "Shootout", true, "listen");
     }
 }
 
