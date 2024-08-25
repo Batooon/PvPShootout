@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "SessionSubsystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "OnlineSessionSettings.h"
+
 
 void APvPShootoutPlayerController::PointerPressed()
 {
@@ -26,6 +28,9 @@ void APvPShootoutPlayerController::BeginPlay()
 
     if(!IsLocalPlayerController())
         return;
+
+    UGameInstance* gameInstance = GetWorld()->GetGameInstance();
+    SessionSubsystem = gameInstance->GetSubsystem<USessionSubsystem>();
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -46,20 +51,40 @@ void APvPShootoutPlayerController::PointerRelease()
 
 void APvPShootoutPlayerController::TryCreateAndJoinNewSession()
 {
-    UGameInstance* gameInstance=GetWorld()->GetGameInstance();
-    USessionSubsystem* sessionSubsystem=gameInstance->GetSubsystem<USessionSubsystem>();
-    sessionSubsystem->OnCreateSessionCompleteEvent.AddDynamic(this, &ThisClass::JoinSessionIfSucceeded);
-    sessionSubsystem->CreateSession(5, false);
+    SessionSubsystem->OnCreateSessionCompleteEvent.AddDynamic(this, &ThisClass::JoinSessionIfSucceeded);
+    SessionSubsystem->CreateSession(5, false);
 }
 
 void APvPShootoutPlayerController::JoinSessionIfSucceeded(bool success)
 {
-    UGameInstance* gameInstance=GetWorld()->GetGameInstance();
-    USessionSubsystem* sessionSubsystem=gameInstance->GetSubsystem<USessionSubsystem>();
-    sessionSubsystem->OnCreateSessionCompleteEvent.RemoveDynamic(this, &ThisClass::JoinSessionIfSucceeded);
+    SessionSubsystem->OnCreateSessionCompleteEvent.RemoveDynamic(this, &ThisClass::JoinSessionIfSucceeded);
     if(success)
     {
+        UE_LOG(LogTemp, Display, TEXT("Successfully joined session"));
         UGameplayStatics::OpenLevel(GetWorld(), "Shootout", true, "listen");
+    }
+}
+
+void APvPShootoutPlayerController::JoinSession(EOnJoinSessionCompleteResult::Type Result)
+{
+    if(Result == EOnJoinSessionCompleteResult::Success)
+    {
+        SessionSubsystem->TryTravelToCurrentSession();
+    }
+}
+
+void APvPShootoutPlayerController::SearchSessions()
+{
+    SessionSubsystem->OnFindSessionsCompleteEvent.AddUObject(this, &ThisClass::SessionsFound);
+    SessionSubsystem->FindSessions(5, false);
+}
+
+void APvPShootoutPlayerController::SessionsFound(const TArray<FOnlineSessionSearchResult>& results, bool success)
+{
+    if(success)
+    {
+        SessionSubsystem->OnJoinSessionCompleteEvent.AddUObject(this, &ThisClass::JoinSession);
+        SessionSubsystem->JoinGameSession(results.Top());
     }
 }
 

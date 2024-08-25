@@ -22,9 +22,14 @@ protected:
 private:
     UFUNCTION()
     void OnCreateSessionButtonClick();
+    UFUNCTION()
+    void OnConnectToHostButtonClick();
 
     UPROPERTY(meta=(BindWidget))
     UButton* CreateSessionButton;
+
+    UPROPERTY(meta=(BindWidget))
+    UButton* ConnectToHostButton;
 
     TWeakObjectPtr<APvPShootoutPlayerController> ShootoutPlayerController;
 };

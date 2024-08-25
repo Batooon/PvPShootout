@@ -6,9 +6,13 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerController.h"
+#include "SessionSubsystem.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "PvPShootoutPlayerController.generated.h"
 
+class USessionSubsystem;
 class UInputMappingContext;
+class FOnlineSessionSearchResult;
 
 /**
  *
@@ -24,6 +28,7 @@ public:
 
     void PointerPressed();
     void TryCreateAndJoinNewSession();
+    void SearchSessions();
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -34,6 +39,9 @@ protected:
     void PointerRelease();
     UFUNCTION()
     void JoinSessionIfSucceeded(bool success);
-    void JoinSession();
+    void JoinSession(EOnJoinSessionCompleteResult::Type Result);
+    void SessionsFound(const TArray<FOnlineSessionSearchResult>& results, bool success);
     virtual void SetupInputComponent() override;
+
+    TWeakObjectPtr<USessionSubsystem> SessionSubsystem;
 };

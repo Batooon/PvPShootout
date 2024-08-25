@@ -10,12 +10,12 @@
 /**
  *
  */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnCreateSessionComplete, bool, Successful);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnStartSessionComplete, bool, Successful);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnEndSessionComplete, bool, Successful);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnDestroySessionComplete, bool, Successful);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FCSOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>& SessionResults, bool Successful);
-DECLARE_MULTICAST_DELEGATE_OneParam(FCSOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCreateSessionCompleted, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStartSessionCompleted, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndSessionCompleted, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDestroySessionCompleted, bool, Successful);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnFindSessionsCompleted, const TArray<FOnlineSessionSearchResult>& SessionResults, bool Successful);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnJoinSessionCompleted, EOnJoinSessionCompleteResult::Type Result);
 
 UCLASS()
 class PVPSHOOTOUT_API USessionSubsystem : public UGameInstanceSubsystem
@@ -31,13 +31,14 @@ public:
     void DestroySession();
     void FindSessions(int32 MaxSearchResults, bool IsLANQuery);
     void JoinGameSession(const FOnlineSessionSearchResult& SearchResult);
+    bool TryTravelToCurrentSession();
 
-    FCSOnCreateSessionComplete OnCreateSessionCompleteEvent;
-    FCSOnStartSessionComplete OnStartSessionCompleteEvent;
-    FCSOnEndSessionComplete OnEndSessionCompleteEvent;
-    FCSOnDestroySessionComplete OnDestroySessionCompleteEvent;
-    FCSOnFindSessionsComplete OnFindSessionsCompleteEvent;
-    FCSOnJoinSessionComplete OnJoinSessionCompleteEvent;
+    FOnCreateSessionCompleted OnCreateSessionCompleteEvent;
+    FOnStartSessionCompleted OnStartSessionCompleteEvent;
+    FOnEndSessionCompleted OnEndSessionCompleteEvent;
+    FOnDestroySessionCompleted OnDestroySessionCompleteEvent;
+    FOnFindSessionsCompleted OnFindSessionsCompleteEvent;
+    FOnJoinSessionCompleted OnJoinSessionCompleteEvent;
 
 protected:
     void OnCreateSessionCompleted(FName SessionName, bool Successful);
@@ -46,7 +47,6 @@ protected:
     void OnDestroySessionCompleted(FName SessionName, bool Successful);
     void OnFindSessionsCompleted(bool Successful);
     void OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
-    bool TryTravelToCurrentSession();
 
 private:
     FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
