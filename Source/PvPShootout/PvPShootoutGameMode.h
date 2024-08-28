@@ -9,11 +9,8 @@
 UCLASS(minimalapi)
 class APvPShootoutGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	APvPShootoutGameMode();
+    APvPShootoutGameMode();
 };
-
-
-

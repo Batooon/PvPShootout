@@ -11,10 +11,15 @@
  *
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCreateSessionCompleted, bool, Successful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStartSessionCompleted, bool, Successful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEndSessionCompleted, bool, Successful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDestroySessionCompleted, bool, Successful);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnFindSessionsCompleted, const TArray<FOnlineSessionSearchResult>& SessionResults, bool Successful);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnFindSessionsCompleted, const TArray<FOnlineSessionSearchResult>& SessionResults,
+                                     bool Successful);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnJoinSessionCompleted, EOnJoinSessionCompleteResult::Type Result);
 
 UCLASS()

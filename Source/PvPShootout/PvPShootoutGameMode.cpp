@@ -5,9 +5,10 @@
 #include "UObject/ConstructorHelpers.h"
 
 APvPShootoutGameMode::APvPShootoutGameMode()
-	: Super()
+    : Super()
 {
     // set default pawn class to our Blueprinted character
-    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/PvPShootout/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(
+        TEXT("/Game/PvPShootout/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
     DefaultPawnClass = PlayerPawnClassFinder.Class;
 }

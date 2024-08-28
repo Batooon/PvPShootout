@@ -6,61 +6,49 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPickUp, APvPShootoutCharacter*, PickUpCharacter);
+class AShootoutCharacter;
 
-class APvPShootoutCharacter;
-
-UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PVPSHOOTOUT_API UTP_WeaponComponent : public USkeletalMeshComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
+    /** Projectile class to spawn */
+    UPROPERTY(EditDefaultsOnly, Category=Projectile)
+    TSubclassOf<class APvPShootoutProjectile> ProjectileClass;
 
-    UPROPERTY(BlueprintAssignable, Category = "Interaction")
-    FOnPickUp OnPickUp;
+    /** Sound to play each time we fire */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+    USoundBase* FireSound;
 
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class APvPShootoutProjectile> ProjectileClass;
+    /** AnimMontage to play each time we fire */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+    UAnimMontage* FireAnimation;
 
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	USoundBase* FireSound;
+    /** Gun muzzle's offset from the characters location */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+    FVector MuzzleOffset;
 
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	UAnimMontage* FireAnimation;
+    /** MappingContext */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+    class UInputMappingContext* FireMappingContext;
 
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector MuzzleOffset;
+    /** Fire Input Action */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+    class UInputAction* FireAction;
 
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputMappingContext* FireMappingContext;
+    /** Sets default values for this component's properties */
+    UTP_WeaponComponent();
 
-	/** Fire Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputAction* FireAction;
+    void SetCharacter(AShootoutCharacter* Character);
 
-	/** Sets default values for this component's properties */
-	UTP_WeaponComponent();
-
-	/** Attaches the actor to a FirstPersonCharacter */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	bool AttachWeapon(APvPShootoutCharacter* TargetCharacter);
-
-	/** Make the weapon Fire a Projectile */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
+    /** Make the weapon Fire a Projectile */
+    void Fire();
 
 protected:
-	/** Ends gameplay for this component. */
-	UFUNCTION()
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    float DamageAmount;
 
-private:
-	/** The Character holding this weapon*/
-	APvPShootoutCharacter* Character;
+    AShootoutCharacter* OwnerCharacter;
 };

@@ -13,12 +13,12 @@ void ULobbyMenu::NativeConstruct()
     APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
     ShootoutPlayerController = Cast<APvPShootoutPlayerController>(playerController);
 
-    if(CreateSessionButton)
+    if (CreateSessionButton)
     {
         CreateSessionButton->OnClicked.AddDynamic(this, &ThisClass::OnCreateSessionButtonClick);
     }
 
-    if(ConnectToHostButton)
+    if (ConnectToHostButton)
     {
         ConnectToHostButton->OnClicked.AddDynamic(this, &ThisClass::OnConnectToHostButtonClick);
     }

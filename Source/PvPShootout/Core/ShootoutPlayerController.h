@@ -14,16 +14,46 @@ UCLASS()
 class PVPSHOOTOUT_API AShootoutPlayerController : public APlayerController
 {
     GENERATED_BODY()
+
+public:
+    void OnKilled();
+
 protected:
     virtual void BeginPlay() override;
+    // virtual void OnPossess(APawn* InPawn) override;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputMappingContext* InputMappingContext;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* FireMappingContext;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* HostControlsContext;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-    TSubclassOf<AActor> RifleClass;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* StartMatchAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* ShowStatsAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* LeaveSessionAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TSubclassOf<UUserWidget> PlayerStatsClass;
 
 private:
-    AActor* SpawnWeapon();
-    void AssignWeapon();
+    UFUNCTION(Server, Unreliable)
+    void StartMatch();
+
+    UFUNCTION()
+    void ShowStats();
+
+    UFUNCTION()
+    void LeaveMatch();
+
+    void InitializeBindings();
+
+    UUserWidget* PlayerStatsWidget;
+
+    bool bindingsInitialized;
 };

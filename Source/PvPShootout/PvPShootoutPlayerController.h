@@ -20,7 +20,7 @@ class FOnlineSessionSearchResult;
 UCLASS()
 class PVPSHOOTOUT_API APvPShootoutPlayerController : public APlayerController
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
@@ -29,13 +29,13 @@ public:
     void PointerPressed();
     void TryCreateAndJoinNewSession();
     void SearchSessions();
+
 protected:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* InputMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputMappingContext* InputMappingContext;
 
-
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
     void PointerRelease();
     UFUNCTION()
     void JoinSessionIfSucceeded(bool success);
